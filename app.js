@@ -10,6 +10,11 @@ const hudPlayer = document.getElementById('hud-player');
 const hudMoves = document.getElementById('hud-moves');
 const statusMessage = document.getElementById('status-message');
 const board = document.getElementById('grid-tablero');
+const victoryModal = document.getElementById('victory-modal');
+const modalPlayer = document.getElementById('modal-player');
+const modalMoves = document.getElementById('modal-moves');
+const modalPlayAgainButton = document.getElementById('modal-play-again');
+const modalBackHomeButton = document.getElementById('modal-back-home');
 
 const gameState = {
   playerName: '',
@@ -17,7 +22,8 @@ const gameState = {
   moves: 0,
   firstCard: null,
   secondCard: null,
-  boardLocked: false
+  boardLocked: false,
+  pendingUnflipTimeout: null
 };
 
 const ingredients = [
@@ -47,6 +53,22 @@ function clearTurnState() {
   gameState.firstCard = null;
   gameState.secondCard = null;
   gameState.boardLocked = false;
+}
+
+function closeVictoryModal() {
+  victoryModal.classList.add('hidden');
+}
+
+function openVictoryModal() {
+  modalPlayer.textContent = gameState.playerName;
+  modalMoves.textContent = String(gameState.moves);
+  victoryModal.classList.remove('hidden');
+}
+
+function hasPlayerWon() {
+  const matchedCards = board.querySelectorAll('.card.matched').length;
+  const totalCards = board.children.length;
+  return totalCards > 0 && matchedCards === totalCards;
 }
 
 function showMistakeFeedback() {
@@ -95,15 +117,23 @@ function checkMatch() {
   if (firstIngredient === secondIngredient) {
     markCardsAsMatched();
     clearFeedback();
+
+    if (hasPlayerWon()) {
+      gameState.boardLocked = true;
+      openVictoryModal();
+      return;
+    }
+
     clearTurnState();
     return;
   }
 
   showMistakeFeedback();
-  setTimeout(() => {
+  gameState.pendingUnflipTimeout = setTimeout(() => {
     unflipCards();
     clearFeedback();
     clearTurnState();
+    gameState.pendingUnflipTimeout = null;
   }, 1000);
 }
 
@@ -141,6 +171,9 @@ function createCardElement(ingredient) {
   cardButton.dataset.ingredient = ingredient;
   cardButton.setAttribute('aria-label', 'Carta de memoria');
 
+  const cardInner = document.createElement('span');
+  cardInner.className = 'card-inner';
+
   const cardFront = document.createElement('span');
   cardFront.className = 'card-front';
   cardFront.textContent = '🍽️';
@@ -149,8 +182,9 @@ function createCardElement(ingredient) {
   cardBack.className = 'card-back';
   cardBack.textContent = ingredient;
 
-  cardButton.appendChild(cardFront);
-  cardButton.appendChild(cardBack);
+  cardInner.appendChild(cardFront);
+  cardInner.appendChild(cardBack);
+  cardButton.appendChild(cardInner);
   cardButton.addEventListener('click', onCardClick);
 
   return cardButton;
@@ -169,10 +203,16 @@ function renderBoard(size) {
 
 function startNewGame() {
   resetVisualState();
+  closeVictoryModal();
   renderBoard(gameState.difficulty);
 }
 
 function resetVisualState() {
+  if (gameState.pendingUnflipTimeout) {
+    clearTimeout(gameState.pendingUnflipTimeout);
+    gameState.pendingUnflipTimeout = null;
+  }
+
   gameState.moves = 0;
   clearTurnState();
   hudMoves.textContent = '0';
@@ -209,6 +249,20 @@ configForm.addEventListener('submit', (event) => {
 });
 
 resetButton.addEventListener('click', () => {
+  closeVictoryModal();
+  resetVisualState();
+  showHomeScreen();
+  configForm.reset();
+  difficultySelect.value = '4';
+  playerNameInput.focus();
+});
+
+modalPlayAgainButton.addEventListener('click', () => {
+  startNewGame();
+});
+
+modalBackHomeButton.addEventListener('click', () => {
+  closeVictoryModal();
   resetVisualState();
   showHomeScreen();
   configForm.reset();

@@ -47,6 +47,22 @@
 
       <section id="grid-tablero" class="board" aria-label="Tablero de cartas"></section>
     </section>
+
+    <section id="victory-modal" class="modal hidden" aria-labelledby="victory-title" aria-modal="true" role="dialog">
+      <div class="modal-content">
+        <h2 id="victory-title">¡Bravissimo!</h2>
+        <p>
+          <strong id="modal-player">Jugador</strong>, encontraste todas las parejas.
+        </p>
+        <p>
+          Movimientos totales: <strong id="modal-moves">0</strong>
+        </p>
+        <div class="modal-actions">
+          <button id="modal-play-again" type="button">Jugar otra vez</button>
+          <button id="modal-back-home" type="button">Volver al inicio</button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script src="app.js" defer></script>
