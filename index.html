@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mamma mia memory (Mmm)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-container">
+    <header class="app-header" aria-labelledby="app-title">
+      <h1 id="app-title">Mamma mia memory (Mmm)</h1>
+      <p class="subtitle">Encuentra las parejas perfectas de ingredientes.</p>
+    </header>
+
+    <section id="home-screen" aria-labelledby="home-title">
+      <h2 id="home-title">Configura tu partida</h2>
+      <form id="config-form" novalidate>
+        <div class="field">
+          <label for="player-name">Nombre o alias</label>
+          <input id="player-name" name="playerName" type="text" maxlength="20" placeholder="Ejemplo: Chef Angelo" required />
+        </div>
+
+        <div class="field">
+          <label for="difficulty">Dificultad</label>
+          <select id="difficulty" name="difficulty" required>
+            <option value="4" selected>Fácil (4x4)</option>
+            <option value="6">Intermedio (6x6)</option>
+            <option value="8">Difícil (8x8)</option>
+          </select>
+        </div>
+
+        <button id="start-btn" type="submit">Iniciar Juego</button>
+      </form>
+    </section>
+
+    <section id="game-screen" class="hidden" aria-labelledby="game-title">
+      <h2 id="game-title" class="visually-hidden">Partida en curso</h2>
+
+      <section class="hud" aria-label="Panel de juego">
+        <p>Jugador: <strong id="hud-player">-</strong></p>
+        <p>Movimientos: <strong id="hud-moves">0</strong></p>
+        <button id="reset-btn" type="button">Reiniciar</button>
+      </section>
+
+      <section id="status-message" class="status-message" aria-live="polite"></section>
+
+      <section id="grid-tablero" class="board" aria-label="Tablero de cartas"></section>
+    </section>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

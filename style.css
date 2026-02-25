@@ -1,0 +1,107 @@
+:root {
+  --tomato-red: #d32f2f;
+  --flour-white: #f5f5f5;
+  --basil-green: #388e3c;
+  --ink: #1f1f1f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--flour-white);
+  color: var(--ink);
+}
+
+.app-container {
+  width: min(960px, 92vw);
+  margin: 2rem auto;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.subtitle {
+  margin: 0;
+}
+
+#home-screen,
+#game-screen {
+  background: #ffffff;
+  border: 2px solid var(--basil-green);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+input,
+select,
+button {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background: var(--tomato-red);
+  color: white;
+  padding: 0.65rem 1rem;
+}
+
+.hud {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.board {
+  margin-top: 1rem;
+  min-height: 180px;
+  border: 2px dashed var(--basil-green);
+  border-radius: 10px;
+  padding: 0.75rem;
+}
+
+.status-message {
+  min-height: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+@media (max-width: 600px) {
+  .app-container {
+    margin: 1rem auto;
+  }
+
+  .hud {
+    align-items: flex-start;
+  }
+}
