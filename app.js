@@ -16,6 +16,12 @@ const modalMoves = document.getElementById('modal-moves');
 const modalPlayAgainButton = document.getElementById('modal-play-again');
 const modalBackHomeButton = document.getElementById('modal-back-home');
 
+const difficultyConfig = {
+  4: { size: 4, pairCount: 8 },
+  6: { size: 6, pairCount: 18 },
+  8: { size: 8, pairCount: 32 }
+};
+
 const gameState = {
   playerName: '',
   difficulty: 4,
@@ -34,6 +40,10 @@ const ingredients = [
   '🍅', '🧆', '🥒', '🍠', '🫑', '🍆', '🥩', '🧇'
 ];
 
+function getDifficultySetup(size) {
+  return difficultyConfig[size] ?? difficultyConfig[4];
+}
+
 function shuffleArray(array) {
   for (let index = array.length - 1; index > 0; index -= 1) {
     const randomIndex = Math.floor(Math.random() * (index + 1));
@@ -43,9 +53,15 @@ function shuffleArray(array) {
 }
 
 function createDeck(size) {
-  const pairCount = (size * size) / 2;
-  const uniqueIngredients = [...new Set(ingredients)].slice(0, pairCount);
-  const pairedIngredients = [...uniqueIngredients, ...uniqueIngredients];
+  const { pairCount } = getDifficultySetup(size);
+  const uniqueIngredients = [...new Set(ingredients)];
+
+  if (uniqueIngredients.length < pairCount) {
+    throw new Error('No hay suficientes ingredientes únicos para esta dificultad.');
+  }
+
+  const selectedIngredients = uniqueIngredients.slice(0, pairCount);
+  const pairedIngredients = [...selectedIngredients, ...selectedIngredients];
   return shuffleArray(pairedIngredients);
 }
 
@@ -191,9 +207,10 @@ function createCardElement(ingredient) {
 }
 
 function renderBoard(size) {
-  const deck = createDeck(size);
+  const { size: boardSize } = getDifficultySetup(size);
+  const deck = createDeck(boardSize);
   board.innerHTML = '';
-  board.style.gridTemplateColumns = `repeat(${size}, minmax(0, 1fr))`;
+  board.style.gridTemplateColumns = `repeat(${boardSize}, minmax(0, 1fr))`;
 
   deck.forEach((ingredient) => {
     const cardElement = createCardElement(ingredient);
@@ -242,6 +259,12 @@ configForm.addEventListener('submit', (event) => {
 
   gameState.playerName = playerName;
   gameState.difficulty = Number(difficultySelect.value);
+
+  if (!difficultyConfig[gameState.difficulty]) {
+    statusMessage.textContent = 'Selecciona una dificultad válida para continuar.';
+    difficultySelect.focus();
+    return;
+  }
 
   hudPlayer.textContent = gameState.playerName;
   showGameScreen();
