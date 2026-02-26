@@ -8,6 +8,7 @@ const homeScreen = document.getElementById('home-screen');
 const gameScreen = document.getElementById('game-screen');
 const hudPlayer = document.getElementById('hud-player');
 const hudMoves = document.getElementById('hud-moves');
+const hudPairs = document.getElementById('hud-pairs');
 const statusMessage = document.getElementById('status-message');
 const board = document.getElementById('grid-tablero');
 const victoryModal = document.getElementById('victory-modal');
@@ -26,6 +27,8 @@ const gameState = {
   playerName: '',
   difficulty: 4,
   moves: 0,
+  matchedPairs: 0,
+  totalPairs: 0,
   firstCard: null,
   secondCard: null,
   boardLocked: false,
@@ -89,17 +92,30 @@ function hasPlayerWon() {
 
 function showMistakeFeedback() {
   statusMessage.textContent = '¡Mamma Mia! Eso no combina.';
+  statusMessage.classList.remove('status-success');
+  statusMessage.classList.add('status-error');
   board.classList.add('board-error');
+}
+
+function showSuccessFeedback() {
+  statusMessage.textContent = '¡Buonissimo! Pareja encontrada.';
+  statusMessage.classList.remove('status-error');
+  statusMessage.classList.add('status-success');
 }
 
 function clearFeedback() {
   statusMessage.textContent = '';
+  statusMessage.classList.remove('status-success', 'status-error');
   board.classList.remove('board-error');
 }
 
 function updateMoves() {
   gameState.moves += 1;
   hudMoves.textContent = String(gameState.moves);
+}
+
+function updatePairsHud() {
+  hudPairs.textContent = `${gameState.matchedPairs} / ${gameState.totalPairs}`;
 }
 
 function flipCard(cardElement) {
@@ -118,6 +134,8 @@ function unflipCards() {
 function markCardsAsMatched() {
   gameState.firstCard.classList.add('matched');
   gameState.secondCard.classList.add('matched');
+  gameState.matchedPairs += 1;
+  updatePairsHud();
 }
 
 function checkMatch() {
@@ -132,7 +150,12 @@ function checkMatch() {
 
   if (firstIngredient === secondIngredient) {
     markCardsAsMatched();
-    clearFeedback();
+    showSuccessFeedback();
+
+    gameState.pendingUnflipTimeout = setTimeout(() => {
+      clearFeedback();
+      gameState.pendingUnflipTimeout = null;
+    }, 700);
 
     if (hasPlayerWon()) {
       gameState.boardLocked = true;
@@ -196,7 +219,9 @@ function createCardElement(ingredient) {
 
   const cardBack = document.createElement('span');
   cardBack.className = 'card-back';
-  cardBack.textContent = ingredient;
+  const ingredientBadge = document.createElement('span');
+  ingredientBadge.textContent = ingredient;
+  cardBack.appendChild(ingredientBadge);
 
   cardInner.appendChild(cardFront);
   cardInner.appendChild(cardBack);
@@ -207,10 +232,17 @@ function createCardElement(ingredient) {
 }
 
 function renderBoard(size) {
-  const { size: boardSize } = getDifficultySetup(size);
+  const { size: boardSize, pairCount } = getDifficultySetup(size);
   const deck = createDeck(boardSize);
+  gameState.totalPairs = pairCount;
+  gameState.matchedPairs = 0;
+  updatePairsHud();
+
   board.innerHTML = '';
   board.style.gridTemplateColumns = `repeat(${boardSize}, minmax(0, 1fr))`;
+  board.classList.remove('board-enter');
+  void board.offsetWidth;
+  board.classList.add('board-enter');
 
   deck.forEach((ingredient) => {
     const cardElement = createCardElement(ingredient);
@@ -231,8 +263,11 @@ function resetVisualState() {
   }
 
   gameState.moves = 0;
+  gameState.matchedPairs = 0;
+  gameState.totalPairs = 0;
   clearTurnState();
   hudMoves.textContent = '0';
+  updatePairsHud();
   clearFeedback();
   board.innerHTML = '';
 }
