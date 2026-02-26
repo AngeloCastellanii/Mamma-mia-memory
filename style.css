@@ -16,15 +16,13 @@ body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background:
-    linear-gradient(45deg, rgba(255, 255, 255, 0.42) 25%, transparent 25%),
-    linear-gradient(-45deg, rgba(255, 255, 255, 0.42) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.42) 75%),
-    linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.42) 75%),
-    radial-gradient(circle at 10% 10%, rgba(211, 47, 47, 0.07), transparent 26%),
-    radial-gradient(circle at 90% 15%, rgba(56, 142, 60, 0.08), transparent 30%),
-    var(--flour-white);
-  background-size: 28px 28px, 28px 28px, 28px 28px, 28px 28px, auto, auto, auto;
-  background-position: 0 0, 0 14px, 14px -14px, -14px 0, 0 0, 0 0, 0 0;
+    linear-gradient(45deg, #ffffff 25%, transparent 25%),
+    linear-gradient(-45deg, #ffffff 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #ffffff 75%),
+    linear-gradient(-45deg, transparent 75%, #ffffff 75%),
+    #f3d8d8;
+  background-size: 28px 28px, 28px 28px, 28px 28px, 28px 28px, auto;
+  background-position: 0 0, 0 14px, 14px -14px, -14px 0, 0 0;
   color: var(--ink);
 }
 
@@ -35,7 +33,7 @@ body {
 
 .app-header {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .subtitle {
@@ -53,21 +51,65 @@ body {
 #home-screen {
   width: min(520px, 100%);
   margin: 0 auto;
+  position: relative;
+  overflow: hidden;
   border: 1px solid #d8d8d8;
-  border-top: 6px solid var(--tomato-red);
   border-radius: 16px;
-  padding: 1.4rem;
+  padding: 1.55rem;
   box-shadow: 0 14px 30px rgba(31, 31, 31, 0.14);
 }
 
+#home-screen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 11px;
+  background: linear-gradient(90deg, #0d9a51 0 33.33%, #ffffff 33.33% 66.66%, #d32f2f 66.66% 100%);
+}
+
+.home-brand {
+  text-align: center;
+  margin-top: 0.35rem;
+  margin-bottom: 1.15rem;
+}
+
 #home-screen h2 {
-  margin-top: 0.15rem;
-  margin-bottom: 1rem;
+  margin: 0;
+  line-height: 1.05;
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.brand-green {
+  color: #0d9a51;
+}
+
+.brand-red {
   color: var(--tomato-red);
+}
+
+.home-brand-subtitle {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.2rem, 3.3vw, 2rem);
+  color: #2b3d57;
+  font-weight: 500;
+}
+
+.home-brand-copy {
+  margin: 0.8rem auto 0;
+  width: min(92%, 380px);
+  color: #556171;
+  line-height: 1.35;
 }
 
 #home-screen .field {
   margin-bottom: 0.9rem;
+}
+
+#home-screen label {
+  font-weight: 600;
+  color: #2b3d57;
 }
 
 #home-screen input,
@@ -80,18 +122,19 @@ body {
 
 #home-screen #start-btn {
   width: 100%;
-  min-height: 46px;
+  min-height: 48px;
   font-weight: 700;
   letter-spacing: 0.02em;
+  font-size: 1.05rem;
 }
 
 #game-screen {
   background:
-    linear-gradient(45deg, var(--paper-light) 25%, transparent 25%),
-    linear-gradient(-45deg, var(--paper-light) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, var(--paper-light) 75%),
-    linear-gradient(-45deg, transparent 75%, var(--paper-light) 75%),
-    var(--paper-dark);
+    linear-gradient(45deg, rgba(211, 47, 47, 0.16) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(211, 47, 47, 0.16) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(211, 47, 47, 0.16) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(211, 47, 47, 0.16) 75%),
+    #ffffff;
   background-size: 30px 30px;
   background-position: 0 0, 0 15px, 15px -15px, -15px 0;
 }
@@ -320,6 +363,10 @@ button:focus-visible {
 @media (max-width: 600px) {
   .app-container {
     margin: 1rem auto;
+  }
+
+  #home-screen {
+    padding: 1.1rem;
   }
 
   .hud {

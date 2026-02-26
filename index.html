@@ -8,16 +8,16 @@
 </head>
 <body>
   <main class="app-container">
-    <header class="app-header" aria-labelledby="app-title">
-      <h1 id="app-title">Mamma mia memory (Mmm)</h1>
-      <p class="subtitle">Encuentra las parejas perfectas de ingredientes.</p>
-    </header>
-
     <section id="home-screen" aria-labelledby="home-title">
-      <h2 id="home-title">Configura tu partida</h2>
+      <div class="home-brand">
+        <h2 id="home-title"><span class="brand-green">Mamma</span> <span class="brand-red">mia!</span></h2>
+        <p class="home-brand-subtitle">Memory Game</p>
+        <p class="home-brand-copy">Encuentra los ingredientes gemelos antes de que se enfríe la pizza 🍕</p>
+      </div>
+
       <form id="config-form" novalidate>
         <div class="field">
-          <label for="player-name">Nombre o alias</label>
+          <label for="player-name">Nombre de chef</label>
           <input id="player-name" name="playerName" type="text" maxlength="20" placeholder="Ejemplo: Chef Angelo" required />
         </div>
 
